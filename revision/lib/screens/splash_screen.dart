@@ -74,8 +74,15 @@ class _SplashScreenState extends State<SplashScreen>
     _progressController.forward();
     await Future.delayed(const Duration(milliseconds: 1500));
 
-    final currentUser = FirebaseAuth.instance.currentUser;
-    final Widget nextScreen = currentUser != null ? const MainShell() : const LoginScreen();
+    Widget nextScreen = const LoginScreen();
+    try {
+      final currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser != null) {
+        nextScreen = const MainShell();
+      }
+    } catch (e) {
+      debugPrint("Firebase Auth check failed: $e");
+    }
 
     if (mounted) {
       Navigator.of(context).pushReplacement(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../data/firestore_service.dart';
 import '../theme/app_theme.dart';
 import 'pdf_viewer_screen.dart';
