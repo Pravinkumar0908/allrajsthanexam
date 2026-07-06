@@ -5,6 +5,7 @@ import '../theme/app_theme.dart';
 import 'chapters_screen.dart';
 import 'live_scraper_screen.dart';
 import 'quiz_screen.dart';
+import 'pyq_subjects_screen.dart';
 
 // Map category IDs to real icons
 const Map<String, IconData> _categoryIcons = {
@@ -154,11 +155,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => QuizScreen(
-            categoryName: 'PYQ Previous Year Papers',
-            questions: QuestionBank.getMixedQuestions(15),
-            timeInMinutes: 12,
-          ),
+          builder: (context) => const PyqSubjectsScreen(),
         ),
       );
     } else if (item.id == 'mock_test') {

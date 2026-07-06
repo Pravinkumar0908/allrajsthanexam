@@ -7,11 +7,13 @@ import 'quiz_screen.dart';
 class ChaptersScreen extends StatefulWidget {
   final QuizCategory category;
   final IconData icon;
+  final bool isPyqMode;
 
   const ChaptersScreen({
     super.key,
     required this.category,
     required this.icon,
+    this.isPyqMode = false,
   });
 
   @override
@@ -33,8 +35,9 @@ class _ChaptersScreenState extends State<ChaptersScreen> {
     setState(() => _isLoading = true);
 
     final String catId = widget.category.id;
-    final List<Map<String, dynamic>> matchingTests =
-        QuestionBank.localChapters[catId] ?? [];
+    final List<Map<String, dynamic>> matchingTests = widget.isPyqMode
+        ? (QuestionBank.localPyqChapters[catId] ?? [])
+        : (QuestionBank.localChapters[catId] ?? []);
 
     setState(() {
       _displayChapters = matchingTests;

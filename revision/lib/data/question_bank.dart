@@ -237,6 +237,126 @@ class QuestionBank {
     ],
   };
 
+  // ── Local PYQ Mock Papers Map ──
+  static final Map<String, List<Map<String, dynamic>>> localPyqChapters = {
+    'rajasthan_history': [
+      {
+        'id': 'pyq_hist_1',
+        'title': 'RAS Pre 2023 Solved Paper',
+        'subtitle': 'History & Integration Solved',
+        'questionsCount': 10,
+        'time': 10,
+      },
+      {
+        'id': 'pyq_hist_2',
+        'title': 'RSMSSB CET 2024 Solved Paper',
+        'subtitle': 'Mewar & Marwar History Solved',
+        'questionsCount': 10,
+        'time': 10,
+      },
+      {
+        'id': 'pyq_hist_3',
+        'title': 'REET L2 2022 Solved Paper',
+        'subtitle': '1857 Revolution Solved',
+        'questionsCount': 10,
+        'time': 10,
+      },
+    ],
+    'art_culture': [
+      {
+        'id': 'pyq_cult_1',
+        'title': 'LDC 2018 Solved Paper',
+        'subtitle': 'Folk Deities & Fairs Solved',
+        'questionsCount': 10,
+        'time': 10,
+      },
+      {
+        'id': 'pyq_cult_2',
+        'title': 'Patwar 2021 Solved Paper',
+        'subtitle': 'Temples & Ornaments Solved',
+        'questionsCount': 10,
+        'time': 10,
+      },
+      {
+        'id': 'pyq_cult_3',
+        'title': 'VDO 2021 Solved Paper',
+        'subtitle': 'Folk Dances & Music Solved',
+        'questionsCount': 10,
+        'time': 10,
+      },
+    ],
+    'geography': [
+      {
+        'id': 'pyq_geog_1',
+        'title': 'Senior Teacher 2022 Solved Paper',
+        'subtitle': 'Physical Divisions & Rivers Solved',
+        'questionsCount': 10,
+        'time': 10,
+      },
+      {
+        'id': 'pyq_geog_2',
+        'title': 'Supervisor 2023 Solved Paper',
+        'subtitle': 'Climate & Soils Solved',
+        'questionsCount': 10,
+        'time': 10,
+      },
+    ],
+    'economy': [
+      {
+        'id': 'pyq_econ_1',
+        'title': 'Assistant Professor 2023 Solved Paper',
+        'subtitle': 'Agriculture & Resources Solved',
+        'questionsCount': 10,
+        'time': 10,
+      },
+    ],
+    'hindi': [
+      {
+        'id': 'pyq_hindi_1',
+        'title': 'SI 2021 Hindi Solved Paper',
+        'subtitle': 'Grammar & Vocabulary Solved',
+        'questionsCount': 10,
+        'time': 10,
+      },
+    ],
+    'math': [
+      {
+        'id': 'pyq_math_1',
+        'title': 'CET 2023 Math Solved Paper',
+        'subtitle': 'Percentage & Interest Solved',
+        'questionsCount': 10,
+        'time': 10,
+      },
+    ],
+    'science': [
+      {
+        'id': 'pyq_sci_1',
+        'title': 'VDO 2021 Science Solved Paper',
+        'subtitle': 'General Physics & Biology Solved',
+        'questionsCount': 10,
+        'time': 10,
+      },
+    ],
+    'reasoning': [
+      {
+        'id': 'pyq_reas_1',
+        'title': 'Constable 2022 Reasoning Paper',
+        'subtitle': 'Coding-Decoding & Relations Solved',
+        'questionsCount': 10,
+        'time': 10,
+      },
+    ],
+    'current_affairs': [
+      {
+        'id': 'pyq_ca_1',
+        'title': 'Current Affairs Solved 2025',
+        'subtitle': 'State Schemes & News Solved',
+        'questionsCount': 10,
+        'time': 10,
+      },
+    ],
+  };
+
   // ── Get questions for a category ──
   static List<Question> getQuestions(String categoryId) {
     switch (categoryId) {
