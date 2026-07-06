@@ -53,16 +53,26 @@ class ScraperService {
         block = block.substring(0, dlEnd);
       }
 
-      // 1. Extract Question Text
+      // 1. Extract Question Text & Exam Tag
       String qText = "";
+      String? examTag;
       int dtStart = block.indexOf('<dt>');
       int dtEnd = block.indexOf('</dt>');
       if (dtStart != -1 && dtEnd != -1) {
         String dtContent = block.substring(dtStart + 4, dtEnd);
 
-        // Remove span tags containing exam info
+        // Extract exam info span if present
         int spanStart = dtContent.indexOf('<span');
         if (spanStart != -1) {
+          int spanEnd = dtContent.indexOf('</span>', spanStart);
+          if (spanEnd != -1) {
+            String spanContent = dtContent.substring(spanStart, spanEnd + 7);
+            String rawTag = spanContent.replaceAll(RegExp(r'<[^>]*>'), '').trim();
+            rawTag = rawTag.replaceAll(RegExp(r'^[\[\(\s]*(Exam\s*:\s*)?|[\]\)\s]*$'), '').trim();
+            if (rawTag.isNotEmpty) {
+              examTag = rawTag;
+            }
+          }
           dtContent = dtContent.substring(0, spanStart);
         }
 
@@ -160,10 +170,198 @@ class ScraperService {
           options: options,
           correctIndex: correctIndex,
           explanation: explanation.isNotEmpty ? explanation : null,
+          examTag: examTag,
         ));
       }
     }
 
     return questions;
+  }
+
+  // ── Fetch GK Tricks ──
+  static Future<List<Map<String, String>>> fetchLiveTricks() async {
+    const String targetUrl = "https://www.rajasthangyan.com/tricks";
+    final String requestUrl = kIsWeb ? "$_corsProxy${Uri.encodeComponent(targetUrl)}" : targetUrl;
+
+    try {
+      final response = await http.get(Uri.parse(requestUrl)).timeout(const Duration(seconds: 15));
+      if (response.statusCode != 200) return [];
+
+      final html = utf8.decode(response.bodyBytes);
+      List<Map<String, String>> tricks = [];
+
+      // Look for trick links: href="trick?tid=X
+      final regExp = RegExp(r'href="trick\?tid=(\d+)[^"]*">.*?rg_tricks_link[^>]*>(.*?)</span>', dotAll: true);
+      final matches = regExp.allMatches(html);
+
+      for (var m in matches) {
+        final id = m.group(1) ?? "";
+        final title = m.group(2)?.replaceAll(RegExp(r'<[^>]*>'), '').trim() ?? "";
+        if (id.isNotEmpty && title.isNotEmpty) {
+          tricks.add({'id': id, 'title': title});
+        }
+      }
+      return tricks;
+    } catch (e) {
+      debugPrint("Error fetching tricks: $e");
+      return [];
+    }
+  }
+
+  // ── Fetch Trick Detail ──
+  static Future<String> fetchTrickDetail(String tid) async {
+    final String targetUrl = "https://www.rajasthangyan.com/trick?tid=$tid";
+    final String requestUrl = kIsWeb ? "$_corsProxy${Uri.encodeComponent(targetUrl)}" : targetUrl;
+
+    try {
+      final response = await http.get(Uri.parse(requestUrl)).timeout(const Duration(seconds: 15));
+      if (response.statusCode != 200) return "Failed to fetch trick detail.";
+
+      final html = utf8.decode(response.bodyBytes);
+      
+      // Parse main content block of the trick
+      int contentStart = html.indexOf('class="maincontent"');
+      if (contentStart == -1) contentStart = html.indexOf('class="container"');
+      
+      if (contentStart != -1) {
+        String subHtml = html.substring(contentStart);
+        int contentEnd = subHtml.indexOf('</div>');
+        if (contentEnd != -1) {
+          subHtml = subHtml.substring(0, contentEnd);
+        }
+        final cleaned = subHtml.replaceAll(RegExp(r'<[^>]*>'), '\n').replaceAll(RegExp(r'\n+'), '\n').trim();
+        return cleaned.isNotEmpty ? cleaned : "No description found.";
+      }
+      return "Trick details not found on the page.";
+    } catch (e) {
+      debugPrint("Error fetching trick detail: $e");
+      return "Error connecting to RajasthanGyan.";
+    }
+  }
+
+  // ── Fetch GK Notes ──
+  static Future<List<Map<String, String>>> fetchLiveNotes() async {
+    const String targetUrl = "https://www.rajasthangyan.com/notes";
+    final String requestUrl = kIsWeb ? "$_corsProxy${Uri.encodeComponent(targetUrl)}" : targetUrl;
+
+    try {
+      final response = await http.get(Uri.parse(requestUrl)).timeout(const Duration(seconds: 15));
+      if (response.statusCode != 200) return [];
+
+      final html = utf8.decode(response.bodyBytes);
+      List<Map<String, String>> notes = [];
+
+      // Split by rg_nts_contain
+      final blocks = html.split('class="rg_nts_contain"');
+      for (int i = 1; i < blocks.length; i++) {
+        String block = blocks[i];
+        int endIdx = block.indexOf('</div>');
+        if (endIdx != -1) block = block.substring(0, endIdx);
+
+        // Subject
+        String subject = "";
+        int h1Start = block.indexOf('<h1>');
+        int h1End = block.indexOf('</h1>');
+        if (h1Start != -1 && h1End != -1) {
+          subject = block.substring(h1Start + 4, h1End).replaceAll(RegExp(r'<[^>]*>'), '').trim();
+        }
+
+        // Title
+        String title = "";
+        int h3Start = block.indexOf('<h3>');
+        int h3End = block.indexOf('</h3>');
+        if (h3Start != -1 && h3End != -1) {
+          title = block.substring(h3Start + 4, h3End).replaceAll(RegExp(r'<[^>]*>'), '').trim();
+        } else {
+          // Fallback to secondary h1 if present
+          int h1SecStart = block.indexOf('<h1>', h1End + 5);
+          int h1SecEnd = block.indexOf('</h1>', h1End + 5);
+          if (h1SecStart != -1 && h1SecEnd != -1) {
+            title = block.substring(h1SecStart + 4, h1SecEnd).replaceAll(RegExp(r'<[^>]*>'), '').trim();
+          }
+        }
+
+        // Snippet
+        String description = "";
+        int pStart = block.indexOf('<p>');
+        int pEnd = block.indexOf('</p>');
+        if (pStart != -1 && pEnd != -1) {
+          description = block.substring(pStart + 3, pEnd).replaceAll(RegExp(r'<[^>]*>'), '').trim();
+        }
+
+        // Link
+        String link = "";
+        int hrefStart = block.indexOf('href="');
+        if (hrefStart != -1) {
+          int hrefEnd = block.indexOf('"', hrefStart + 6);
+          if (hrefEnd != -1) {
+            link = block.substring(hrefStart + 6, hrefEnd).trim();
+          }
+        }
+
+        if (subject.isNotEmpty) {
+          notes.add({
+            'subject': subject,
+            'title': title.isNotEmpty ? title : subject,
+            'description': description,
+            'link': link.isNotEmpty ? "https://www.rajasthangyan.com/$link" : "",
+          });
+        }
+      }
+      return notes;
+    } catch (e) {
+      debugPrint("Error fetching notes: $e");
+      return [];
+    }
+  }
+
+  // ── Fetch Important Days Calendar ──
+  static Future<List<Map<String, String>>> fetchLiveDays() async {
+    const String targetUrl = "https://www.rajasthangyan.com/imp_day_calender";
+    final String requestUrl = kIsWeb ? "$_corsProxy${Uri.encodeComponent(targetUrl)}" : targetUrl;
+
+    try {
+      final response = await http.get(Uri.parse(requestUrl)).timeout(const Duration(seconds: 15));
+      if (response.statusCode != 200) return [];
+
+      final html = utf8.decode(response.bodyBytes);
+      List<Map<String, String>> daysList = [];
+
+      // Parse days list
+      final regExp = RegExp(r'<div class="index_topic">.*?href="([^"]+)".*?><span>(.*?)</span>', dotAll: true);
+      final matches = regExp.allMatches(html);
+
+      for (var m in matches) {
+        final link = m.group(1)?.trim() ?? "";
+        final title = m.group(2)?.replaceAll(RegExp(r'<[^>]*>'), '').trim() ?? "";
+        if (title.isNotEmpty) {
+          daysList.add({
+            'title': title,
+            'link': link.startsWith('http') ? link : "https://www.rajasthangyan.com/$link",
+          });
+        }
+      }
+      return daysList;
+    } catch (e) {
+      debugPrint("Error fetching calendar days: $e");
+      return [];
+    }
+  }
+
+  // ── Fetch General Questions Feed ──
+  static Future<List<Question>> fetchQuestionsFeed(String relation) async {
+    final String targetUrl = "https://www.rajasthangyan.com/questions?rel=$relation";
+    final String requestUrl = kIsWeb ? "$_corsProxy${Uri.encodeComponent(targetUrl)}" : targetUrl;
+
+    try {
+      final response = await http.get(Uri.parse(requestUrl)).timeout(const Duration(seconds: 15));
+      if (response.statusCode != 200) return [];
+
+      final html = utf8.decode(response.bodyBytes);
+      return parseRajasthanGyanHtml(html, relation);
+    } catch (e) {
+      debugPrint("Error fetching questions feed: $e");
+      return [];
+    }
   }
 }
