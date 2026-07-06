@@ -4,18 +4,11 @@ class QuestionBank {
   // ── Categories ──
   static const List<QuizCategory> categories = [
     QuizCategory(
-      id: 'rajasthan_gk',
-      name: 'Rajasthan GK',
+      id: 'rajasthan_history',
+      name: 'Rajasthan History',
       icon: '🏰',
       questionCount: 15,
-      description: 'राजस्थान सामान्य ज्ञान',
-    ),
-    QuizCategory(
-      id: 'indian_history',
-      name: 'Indian History',
-      icon: '📜',
-      questionCount: 15,
-      description: 'भारतीय इतिहास',
+      description: 'राजस्थान का इतिहास',
     ),
     QuizCategory(
       id: 'art_culture',
@@ -32,20 +25,6 @@ class QuestionBank {
       description: 'भूगोल',
     ),
     QuizCategory(
-      id: 'polity',
-      name: 'Indian Polity',
-      icon: '⚖️',
-      questionCount: 15,
-      description: 'भारतीय राजव्यवस्था',
-    ),
-    QuizCategory(
-      id: 'science',
-      name: 'Science',
-      icon: '🔬',
-      questionCount: 15,
-      description: 'विज्ञान',
-    ),
-    QuizCategory(
       id: 'economy',
       name: 'Economy',
       icon: '📊',
@@ -54,10 +33,24 @@ class QuestionBank {
     ),
     QuizCategory(
       id: 'hindi',
-      name: 'Hindi Language',
+      name: 'Hindi',
       icon: '📝',
       questionCount: 15,
-      description: 'हिंदी भाषा',
+      description: 'हिंदी व्याकरण',
+    ),
+    QuizCategory(
+      id: 'math',
+      name: 'Mathematics',
+      icon: '🔢',
+      questionCount: 15,
+      description: 'गणित',
+    ),
+    QuizCategory(
+      id: 'science',
+      name: 'Science',
+      icon: '🔬',
+      questionCount: 15,
+      description: 'सामान्य विज्ञान',
     ),
     QuizCategory(
       id: 'current_affairs',
@@ -66,54 +59,231 @@ class QuestionBank {
       questionCount: 15,
       description: 'समसामयिकी',
     ),
+    QuizCategory(
+      id: 'reasoning',
+      name: 'Reasoning',
+      icon: '🧠',
+      questionCount: 15,
+      description: 'तर्कशक्ति',
+    ),
   ];
+
+  // ── Local Mock Tests/Chapters Map ──
+  static final Map<String, List<Map<String, dynamic>>> localChapters = {
+    'rajasthan_history': [
+      {
+        'id': 'raj_hist_1',
+        'title': 'मेवाड़ का इतिहास (Guhel Dynasty)',
+        'subtitle': 'Rajasthan History Mock Test 1',
+        'questionsCount': 10,
+        'time': 10,
+      },
+      {
+        'id': 'raj_hist_2',
+        'title': 'मारवाड़ का इतिहास (Rathore Dynasty)',
+        'subtitle': 'Rajasthan History Mock Test 2',
+        'questionsCount': 10,
+        'time': 10,
+      },
+      {
+        'id': 'raj_hist_3',
+        'title': '1857 की क्रांति व प्रजामण्डल आंदोलन',
+        'subtitle': 'Rajasthan History Mock Test 3',
+        'questionsCount': 10,
+        'time': 10,
+      },
+    ],
+    'art_culture': [
+      {
+        'id': 'art_cult_1',
+        'title': 'राजस्थान के लोक देवता व देवियाँ',
+        'subtitle': 'Art & Culture Mock Test 1',
+        'questionsCount': 10,
+        'time': 10,
+      },
+      {
+        'id': 'art_cult_2',
+        'title': 'राजस्थान के मेले, त्यौहार व रीति-रिवाज',
+        'subtitle': 'Art & Culture Mock Test 2',
+        'questionsCount': 10,
+        'time': 10,
+      },
+      {
+        'id': 'art_cult_3',
+        'title': 'राजस्थान के लोकनृत्य व संगीत',
+        'subtitle': 'Art & Culture Mock Test 3',
+        'questionsCount': 10,
+        'time': 10,
+      },
+    ],
+    'geography': [
+      {
+        'id': 'geog_1',
+        'title': 'राजस्थान का भौतिक स्वरूप',
+        'subtitle': 'Geography Mock Test 1',
+        'questionsCount': 10,
+        'time': 10,
+      },
+      {
+        'id': 'geog_2',
+        'title': 'राजस्थान की नदियां व झीलें',
+        'subtitle': 'Geography Mock Test 2',
+        'questionsCount': 10,
+        'time': 10,
+      },
+      {
+        'id': 'geog_3',
+        'title': 'जलवायु, मिट्टियां व वन्यजीव',
+        'subtitle': 'Geography Mock Test 3',
+        'questionsCount': 10,
+        'time': 10,
+      },
+    ],
+    'economy': [
+      {
+        'id': 'econ_1',
+        'title': 'कृषि, पशुपालन व सिंचाई परियोजनाएं',
+        'subtitle': 'Economy Mock Test 1',
+        'questionsCount': 10,
+        'time': 10,
+      },
+      {
+        'id': 'econ_2',
+        'title': 'खनिज, ऊर्जा संसाधन व पर्यटन',
+        'subtitle': 'Economy Mock Test 2',
+        'questionsCount': 10,
+        'time': 10,
+      },
+    ],
+    'hindi': [
+      {
+        'id': 'hindi_1',
+        'title': 'संधि, समास, उपसर्ग व प्रत्यय',
+        'subtitle': 'Hindi Grammar Mock Test 1',
+        'questionsCount': 10,
+        'time': 10,
+      },
+      {
+        'id': 'hindi_2',
+        'title': 'पर्यायवाची, विलोम व मुहावरे',
+        'subtitle': 'Hindi Grammar Mock Test 2',
+        'questionsCount': 10,
+        'time': 10,
+      },
+    ],
+    'math': [
+      {
+        'id': 'math_1',
+        'title': 'प्रतिशत, लाभ-हानि व अनुपात',
+        'subtitle': 'Mathematics Mock Test 1',
+        'questionsCount': 10,
+        'time': 10,
+      },
+      {
+        'id': 'math_2',
+        'title': 'ब्याज, औसत, समय और दूरी',
+        'subtitle': 'Mathematics Mock Test 2',
+        'questionsCount': 10,
+        'time': 10,
+      },
+    ],
+    'science': [
+      {
+        'id': 'sci_1',
+        'title': 'भौतिक व रासायनिक विज्ञान',
+        'subtitle': 'General Science Mock Test 1',
+        'questionsCount': 10,
+        'time': 10,
+      },
+      {
+        'id': 'sci_2',
+        'title': 'जीव विज्ञान व मानव शरीर',
+        'subtitle': 'General Science Mock Test 2',
+        'questionsCount': 10,
+        'time': 10,
+      },
+    ],
+    'current_affairs': [
+      {
+        'id': 'ca_1',
+        'title': 'समसामयिकी (Current Affairs) - Test 1',
+        'subtitle': 'Monthly Mock Test 1',
+        'questionsCount': 10,
+        'time': 10,
+      },
+      {
+        'id': 'ca_2',
+        'title': 'समसामयिकी (Current Affairs) - Test 2',
+        'subtitle': 'Monthly Mock Test 2',
+        'questionsCount': 10,
+        'time': 10,
+      },
+    ],
+    'reasoning': [
+      {
+        'id': 'reas_1',
+        'title': 'कोडिंग-डिकोडिंग व श्रृंखला परीक्षण',
+        'subtitle': 'Reasoning Mock Test 1',
+        'questionsCount': 10,
+        'time': 10,
+      },
+      {
+        'id': 'reas_2',
+        'title': 'दिशा ज्ञान, रक्त संबंध व घड़ी',
+        'subtitle': 'Reasoning Mock Test 2',
+        'questionsCount': 10,
+        'time': 10,
+      },
+    ],
+  };
 
   // ── Get questions for a category ──
   static List<Question> getQuestions(String categoryId) {
     switch (categoryId) {
-      case 'rajasthan_gk':
-        return _rajasthanGK;
-      case 'indian_history':
-        return _indianHistory;
+      case 'rajasthan_history':
+        return _rajasthanHistory;
       case 'art_culture':
-        return _rajasthanGK;
+        return _artCulture;
       case 'geography':
         return _geography;
-      case 'polity':
-        return _polity;
-      case 'science':
-        return _science;
       case 'economy':
         return _economy;
       case 'hindi':
         return _hindi;
+      case 'math':
+        return _math;
+      case 'science':
+        return _science;
       case 'current_affairs':
         return _currentAffairs;
+      case 'reasoning':
+        return _reasoning;
       default:
-        return _rajasthanGK;
+        return _rajasthanHistory;
     }
   }
 
   // ── All questions for mixed mock test ──
   static List<Question> getMixedQuestions(int count) {
     final all = <Question>[
-      ..._rajasthanGK,
-      ..._indianHistory,
+      ..._rajasthanHistory,
+      ..._artCulture,
       ..._geography,
-      ..._polity,
-      ..._science,
       ..._economy,
       ..._hindi,
+      ..._math,
+      ..._science,
       ..._currentAffairs,
+      ..._reasoning,
     ];
     all.shuffle();
     return all.take(count).toList();
   }
 
   // ─────────────────────────────────────────────
-  // RAJASTHAN GK
+  // RAJASTHAN HISTORY
   // ─────────────────────────────────────────────
-  static final List<Question> _rajasthanGK = [
+  static final List<Question> _rajasthanHistory = [
     const Question(
       id: 'rj1',
       question: 'राजस्थान का क्षेत्रफल भारत के कुल क्षेत्रफल का कितना प्रतिशत है?',
@@ -222,9 +392,9 @@ class QuestionBank {
   ];
 
   // ─────────────────────────────────────────────
-  // INDIAN HISTORY
+  // ART & CULTURE
   // ─────────────────────────────────────────────
-  static final List<Question> _indianHistory = [
+  static final List<Question> _artCulture = [
     const Question(
       id: 'ih1',
       question: 'सिंधु घाटी सभ्यता की खोज किस वर्ष हुई?',
@@ -1015,6 +1185,158 @@ class QuestionBank {
       options: ['11 दिसंबर 2019', '5 अगस्त 2019', '26 जनवरी 2020', '15 अगस्त 2019'],
       correctIndex: 0,
       explanation: 'CAA (Citizenship Amendment Act) 11 दिसंबर 2019 को संसद में पारित हुआ।',
+    ),
+  ];
+
+  // ─────────────────────────────────────────────
+  // MATHEMATICS (math)
+  // ─────────────────────────────────────────────
+  static final List<Question> _math = [
+    const Question(
+      id: 'm1',
+      question: 'एक वस्तु को 450 रुपये में बेचने पर 10% की हानि होती है। 10% लाभ कमाने के लिए उसे कितने में बेचना चाहिए?',
+      options: ['500 रुपये', '550 रुपये', '600 रुपये', '480 रुपये'],
+      correctIndex: 1,
+      explanation: 'क्रय मूल्य = 450 / 0.9 = 500 रुपये। 10% लाभ के साथ विक्रय मूल्य = 500 * 1.1 = 550 रुपये।',
+    ),
+    const Question(
+      id: 'm2',
+      question: 'यदि A : B = 2 : 3 और B : C = 4 : 5 है, तो A : B : C क्या होगा?',
+      options: ['2 : 3 : 5', '8 : 12 : 15', '6 : 9 : 10', '8 : 10 : 12'],
+      correctIndex: 1,
+      explanation: 'A:B = 8:12, B:C = 12:15, अतः A:B:C = 8:12:15।',
+    ),
+    const Question(
+      id: 'm3',
+      question: 'कितने वर्षों में 10% वार्षिक साधारण ब्याज की दर से कोई धन दोगुना हो जाएगा?',
+      options: ['5 वर्ष', '8 वर्ष', '10 वर्ष', '12 वर्ष'],
+      correctIndex: 2,
+      explanation: 'ब्याज = मूलधन। ब्याज = P * R * T / 100 => P = P * 10 * T / 100 => T = 10 वर्ष।',
+    ),
+    const Question(
+      id: 'm4',
+      question: '30% का 150 + 40% का 250 किसके बराबर है?',
+      options: ['120', '135', '145', '160'],
+      correctIndex: 2,
+      explanation: '(150 * 30/100) + (250 * 40/100) = 45 + 100 = 145।',
+    ),
+    const Question(
+      id: 'm5',
+      question: 'A किसी कार्य को 10 दिन में और B उसे 15 दिन में पूरा कर सकता है। दोनों मिलकर उस कार्य को कितने दिन में पूरा करेंगे?',
+      options: ['5 दिन', '6 दिन', '8 दिन', '7.5 दिन'],
+      correctIndex: 1,
+      explanation: 'दोनों मिलकर काम करेंगे = (10 * 15) / (10 + 15) = 150 / 25 = 6 दिन।',
+    ),
+    const Question(
+      id: 'm6',
+      question: 'प्रथम 5 अभाज्य संख्याओं का औसत क्या होगा?',
+      options: ['5.6', '5.4', '6.2', '4.8'],
+      correctIndex: 0,
+      explanation: 'प्रथम 5 अभाज्य संख्याएँ: 2, 3, 5, 7, 11। योग = 28। औसत = 28 / 5 = 5.6।',
+    ),
+    const Question(
+      id: 'm7',
+      question: 'एक रेलगाड़ी 72 किमी/घंटा की गति से चल रही है। उसकी गति मीटर प्रति सेकंड में क्या होगी?',
+      options: ['15 मी/से', '20 मी/से', '25 मी/से', '30 मी/से'],
+      correctIndex: 1,
+      explanation: '72 * (5/18) = 4 * 5 = 20 मी/से।',
+    ),
+    const Question(
+      id: 'm8',
+      question: 'यदि दो संख्याओं का अनुपात 3:4 है और उनका महत्तम समापवर्तक (HCF) 4 है, तो उनका लघुत्तम समापवर्त्य (LCM) क्या होगा?',
+      options: ['12', '24', '36', '48'],
+      correctIndex: 3,
+      explanation: 'संख्याएँ 3*4 = 12 और 4*4 = 16 हैं। 12 और 16 का LCM 48 है।',
+    ),
+    const Question(
+      id: 'm9',
+      question: 'एक वृत्ताकार मैदान की त्रिज्या 7 मीटर है। उसका क्षेत्रफल क्या होगा?',
+      options: ['154 वर्ग मीटर', '44 वर्ग मीटर', '88 वर्ग मीटर', '110 वर्ग मीटर'],
+      correctIndex: 0,
+      explanation: 'क्षेत्रफल = πr² = (22/7) * 7 * 7 = 154 वर्ग मीटर।',
+    ),
+    const Question(
+      id: 'm10',
+      question: 'एक त्रिभुज के तीन कोणों का अनुपात 1:2:3 है। सबसे बड़ा कोण क्या होगा?',
+      options: ['60°', '90°', '120°', '75°'],
+      correctIndex: 1,
+      explanation: 'कोणों का योग = 180°। x + 2x + 3x = 180 => 6x = 180 => x = 30°। सबसे बड़ा कोण = 3x = 90°।',
+    ),
+  ];
+
+  // ─────────────────────────────────────────────
+  // REASONING (reasoning)
+  // ─────────────────────────────────────────────
+  static final List<Question> _reasoning = [
+    const Question(
+      id: 'rs1',
+      question: 'यदि एक निश्चित कोड में BAT को 23 लिखा जाता है और CAT को 24 लिखा जाता है, तो BALL को क्या लिखा जाएगा?',
+      options: ['27', '28', '30', '32'],
+      correctIndex: 0,
+      explanation: 'अक्षरों के वर्णमाला मान का योग: B(2) + A(1) + L(12) + L(12) = 27।',
+    ),
+    const Question(
+      id: 'rs2',
+      question: 'दी गई श्रृंखला को पूरा करें: 2, 6, 12, 20, 30, ?',
+      options: ['38', '40', '42', '44'],
+      correctIndex: 2,
+      explanation: 'अंतर क्रमशः बढ़ रहा है: +4, +6, +8, +10, +12। अतः 30 + 12 = 42।',
+    ),
+    const Question(
+      id: 'rs3',
+      question: 'एक व्यक्ति पूर्व की ओर 5 किमी चलता है, फिर बाईं ओर मुड़कर 4 किमी चलता है। वह फिर बाईं ओर मुड़कर 5 किमी चलता है। अब वह अपने शुरुआती बिंदु से कितनी दूरी पर है?',
+      options: ['3 किमी', '4 किमी', '5 किमी', '9 किमी'],
+      correctIndex: 1,
+      explanation: 'व्यक्ति प्रारंभिक बिंदु से सीधे उत्तर दिशा में 4 किमी की दूरी पर है।',
+    ),
+    const Question(
+      id: 'rs4',
+      question: 'A, B का भाई है। C, A की माता है। D, C का पिता है। B का D से क्या संबंध है (यदि B पुरुष है)?',
+      options: ['पुत्र', 'पौत्र (नाती)', 'भतीजा', 'भाई'],
+      correctIndex: 1,
+      explanation: 'C, B की भी माता है। माता का पिता नाना कहलाता है, अतः B, D का नाती/पौत्र (Grandson) है।',
+    ),
+    const Question(
+      id: 'rs5',
+      question: 'विषम शब्द चुनें:',
+      options: ['दही', 'मक्खन', 'दूध', 'घी'],
+      correctIndex: 2,
+      explanation: 'दही, मक्खन और घी सभी दूध से बनने वाले उत्पाद हैं, जबकि दूध इनका मूल स्रोत है।',
+    ),
+    const Question(
+      id: 'rs6',
+      question: 'यदि बीता हुआ कल गुरुवार था, तो आने वाले कल के बाद का दिन क्या होगा?',
+      options: ['रविवार', 'सोमवार', 'मंगलवार', 'शनिवार'],
+      correctIndex: 1,
+      explanation: 'बीता हुआ कल = गुरुवार, आज = शुक्रवार, आने वाला कल = शनिवार, उसके बाद का दिन = रविवार और उसका अगला दिन = सोमवार।',
+    ),
+    const Question(
+      id: 'rs7',
+      question: 'दी गई श्रृंखला में लुप्त पद ज्ञात करें: AZ, BY, CX, ?',
+      options: ['DW', 'EV', 'FU', 'GT'],
+      correctIndex: 0,
+      explanation: 'पहला अक्षर आगे बढ़ रहा है (A->B->C->D) और दूसरा अक्षर विपरीत दिशा से आ रहा है (Z->Y->X->W)।',
+    ),
+    const Question(
+      id: 'rs8',
+      question: 'घड़ी में 3:00 बजे घंटे and मिनट की सुइयों के बीच कितने डिग्री का कोण बनता है?',
+      options: ['45°', '90°', '120°', '180°'],
+      correctIndex: 1,
+      explanation: '3:00 बजे मिनट की सुई 12 पर और घंटे की सुई 3 पर होती है, जो कि ठीक समकोण (90°) बनाती है।',
+    ),
+    const Question(
+      id: 'rs9',
+      question: 'सूर्य : पूर्व :: गंगा : ?',
+      options: ['नदी', 'हिमालय', 'पश्चिम', 'पवित्र'],
+      correctIndex: 1,
+      explanation: 'जैसे सूर्य पूर्व से उदय होता है, वैसे ही गंगा नदी हिमालय (गंगोत्री) से निकलती है।',
+    ),
+    const Question(
+      id: 'rs10',
+      question: 'यदि "+" का अर्थ "-", "-" का अर्थ "*", "*" का अर्थ "/" और "/" का अर्थ "+" है, तो 15 - 3 + 10 / 5 का मान क्या होगा?',
+      options: ['30', '40', '25', '35'],
+      correctIndex: 1,
+      explanation: 'चिह्न बदलने पर: 15 * 3 - 10 + 5 = 45 - 10 + 5 = 40।',
     ),
   ];
 }

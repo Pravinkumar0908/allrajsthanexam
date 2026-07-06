@@ -7,15 +7,15 @@ import 'live_scraper_screen.dart';
 
 // Map category IDs to real icons
 const Map<String, IconData> _categoryIcons = {
-  'rajasthan_gk': Icons.account_balance_rounded,
-  'history': Icons.history_edu_rounded,
+  'rajasthan_history': Icons.castle_rounded,
   'art_culture': Icons.palette_rounded,
   'geography': Icons.public_rounded,
-  'polity': Icons.gavel_rounded,
-  'science': Icons.science_rounded,
   'economy': Icons.show_chart_rounded,
   'hindi': Icons.translate_rounded,
+  'math': Icons.calculate_rounded,
+  'science': Icons.science_rounded,
   'current_affairs': Icons.newspaper_rounded,
+  'reasoning': Icons.psychology_rounded,
 };
 
 class HomeScreen extends StatefulWidget {

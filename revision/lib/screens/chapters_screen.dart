@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../models/question.dart';
-import '../data/firestore_service.dart';
+import '../data/question_bank.dart';
 import 'quiz_screen.dart';
 
 class ChaptersScreen extends StatefulWidget {
@@ -28,238 +28,56 @@ class _ChaptersScreenState extends State<ChaptersScreen> {
     _loadChapters();
   }
 
-  bool _matchCategory(String testSubject, String testExam, String categoryId) {
-    final sub = testSubject.toLowerCase();
-    final ex = testExam.toLowerCase();
-    final cat = categoryId.toLowerCase();
 
-    // If it is a global mock test for all subjects/exams, show it under all categories
-    if (sub.contains('all') || ex.contains('all') || sub.isEmpty || ex.isEmpty) {
-      return true;
-    }
-
-    if (cat == 'rajasthan_gk') {
-      return sub.contains('gk') || sub.contains('rajasthan') || ex.contains('rajasthan') || ex.contains('gk') || ex.contains('cet');
-    }
-    if (cat == 'indian_history') {
-      return sub.contains('history') || sub.contains('इतिहास') || ex.contains('history');
-    }
-    if (cat == 'geography') {
-      return sub.contains('geography') || sub.contains('भूगोल') || ex.contains('geography');
-    }
-    if (cat == 'polity') {
-      return sub.contains('polity') || sub.contains('संविधान') || sub.contains('राजव्यवस्था') || ex.contains('polity');
-    }
-    if (cat == 'science') {
-      return sub.contains('science') || sub.contains('विज्ञान') || ex.contains('science');
-    }
-    if (cat == 'economy') {
-      return sub.contains('economy') || sub.contains('अर्थशास्त्र') || sub.contains('अर्थव्यवस्था') || ex.contains('economy');
-    }
-    if (cat == 'hindi') {
-      return sub.contains('hindi') || sub.contains('हिंदी') || ex.contains('hindi');
-    }
-    if (cat == 'current_affairs') {
-      return sub.contains('current') || sub.contains('affairs') || sub.contains('समसामयिकी') || ex.contains('current');
-    }
-    return false;
-  }
-
-  void _loadChapters() async {
+  void _loadChapters() {
     setState(() => _isLoading = true);
 
     final String catId = widget.category.id;
-    final List<Map<String, dynamic>> matchingTests = [];
+    final List<Map<String, dynamic>> matchingTests =
+        QuestionBank.localChapters[catId] ?? [];
 
-    if (catId == 'rajasthan_gk') {
-      debugPrint("Fetching all GK chapters for Rajasthan GK category");
-      final gkChapters = await FirestoreService.fetchGkChapters(null);
-      matchingTests.addAll(gkChapters);
-    } else if (catId == 'indian_history') {
-      debugPrint("Fetching History chapters for Indian History category");
-      final gkChapters = await FirestoreService.fetchGkChapters('itihas');
-      matchingTests.addAll(gkChapters);
-    } else if (catId == 'geography') {
-      debugPrint("Fetching Geography chapters for Geography category");
-      final gkChapters = await FirestoreService.fetchGkChapters('bhugol');
-      matchingTests.addAll(gkChapters);
-    } else if (catId == 'art_culture') {
-      debugPrint("Fetching Art & Culture chapters for Art & Culture category");
-      final gkChapters = await FirestoreService.fetchGkChapters('rajasthan_kala_sanskriti');
-      matchingTests.addAll(gkChapters);
-    } else if (catId == 'current_affairs') {
-      debugPrint("Fetching Current Affairs months");
-      final caMonths = await FirestoreService.fetchCurrentAffairsMonths();
-      for (var m in caMonths) {
-        matchingTests.add({
-          'isCurrentAffairs': true,
-          'isFirestore': false,
-          'isGkCollection': false,
-          'id': m['slug'],
-          'title': m['title'],
-          'subtitle': m['subtitle'],
-          'questionsCount': 10,
-          'time': 15,
-        });
-      }
-    } else {
-      debugPrint("Fetching general tests from collection 'tests' for category: $catId");
-      final firestoreTests = await FirestoreService.fetchTests();
-      for (var t in firestoreTests) {
-        debugPrint("Checking test: title=${t['title']}, exam=${t['exam']}, subject=${t['subject']}");
-        if (_matchCategory(t['subject'] ?? '', t['exam'] ?? '', catId)) {
-          debugPrint("Match found for category $catId!");
-          matchingTests.add({
-            'isFirestore': true,
-            'isGkCollection': false,
-            'id': t['id'],
-            'title': t['title'],
-            'subtitle': '${t['exam']} • ${t['subject']}',
-            'questionsCount': t['totalQuestions'],
-            'time': t['duration'],
-          });
-        }
-      }
-    }
-
-    if (mounted) {
-      setState(() {
-        _displayChapters = matchingTests;
-        _isLoading = false;
-      });
-    }
+    setState(() {
+      _displayChapters = matchingTests;
+      _isLoading = false;
+    });
   }
 
-  void _startQuiz(Map<String, dynamic> chapter) async {
-    if (chapter['isCurrentAffairs'] == true) {
-      // Show full-screen loading dialog while fetching questions from Firestore current_affairs collection
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => const Center(
-          child: Card(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CircularProgressIndicator(),
-                  SizedBox(width: 16),
-                  Text(
-                    'Fetching current affairs...',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
-
-      final questions = await FirestoreService.fetchCurrentAffairsQuestions(chapter['id']);
-      
-      if (mounted) {
-        Navigator.pop(context); // Dismiss loading dialog
-      }
-
-      if (questions.isEmpty) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('No Current Affairs questions available for this month.'),
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
-        }
-        return;
-      }
-
-      if (mounted) {
-        Navigator.push(
-          context,
-          _slideRoute(QuizScreen(
-            categoryName: chapter['title'],
-            questions: questions,
-            timeInMinutes: chapter['time'] ?? 15,
-          )),
-        );
-      }
-    } else if (chapter['isGkCollection'] == true) {
-      // Questions are already parsed and stored in the map!
-      final List<Question> questions = List<Question>.from(chapter['questions']);
-      
-      if (questions.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('No questions available in this chapter yet.'),
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
-        return;
-      }
-
-      Navigator.push(
-        context,
-        _slideRoute(QuizScreen(
-          categoryName: chapter['title'],
-          questions: questions,
-          timeInMinutes: chapter['time'],
-        )),
-      );
-    } else if (chapter['isFirestore'] == true) {
-      // Show full-screen loading dialog while fetching questions from Firestore tests collection
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => const Center(
-          child: Card(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CircularProgressIndicator(),
-                  SizedBox(width: 16),
-                  Text(
-                    'Fetching questions...',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
-
-      final questions = await FirestoreService.fetchTestQuestions(chapter['id']);
-      
-      if (mounted) {
-        Navigator.pop(context); // Dismiss loading dialog
-      }
-
-      if (questions.isEmpty) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Failed to load questions. Please check your internet connection.'),
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
-        }
-        return;
-      }
-
-      if (mounted) {
-        Navigator.push(
-          context,
-          _slideRoute(QuizScreen(
-            categoryName: chapter['title'],
-            questions: questions,
-            timeInMinutes: chapter['time'],
-          )),
-        );
-      }
+  void _startQuiz(Map<String, dynamic> chapter) {
+    final String catId = widget.category.id;
+    final List<Question> categoryQuestions = QuestionBank.getQuestions(catId);
+    
+    // Slice or adjust questions based on chapter/test id to make them unique
+    List<Question> questionsToUse = List.from(categoryQuestions);
+    
+    if (chapter['id'].endsWith('_2') && categoryQuestions.length > 5) {
+      questionsToUse = categoryQuestions.skip(5).toList();
+    } else if (chapter['id'].endsWith('_3') && categoryQuestions.length > 8) {
+      questionsToUse = categoryQuestions.skip(8).toList();
     }
+    
+    int limit = chapter['questionsCount'] ?? 10;
+    if (questionsToUse.length > limit) {
+      questionsToUse = questionsToUse.take(limit).toList();
+    }
+
+    if (questionsToUse.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No questions available in this chapter yet.'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
+    Navigator.push(
+      context,
+      _slideRoute(QuizScreen(
+        categoryName: chapter['title'],
+        questions: questionsToUse,
+        timeInMinutes: chapter['time'] ?? 10,
+      )),
+    );
   }
 
   PageRouteBuilder _slideRoute(Widget page) {
